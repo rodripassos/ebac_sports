@@ -9,7 +9,7 @@ import { RootReducer } from '../../store'
 import { adicionar } from '../../store/reducers/carrinho'
 import { favoritar } from '../../store/reducers/favoritos'
 
-type Props = {
+export type Props = {
   produto: ProdutoType
   estaNosFavoritos?: boolean
 }
@@ -19,17 +19,14 @@ export const paraReal = (valor: number) =>
     valor
   )
 
-const ProdutoComponent = ({ produto }: Props) => {
+const ProdutoComponent = ({ produto, estaNosFavoritos }: Props) => {
   const dispatch = useDispatch()
   const favoritos = useSelector((state: RootReducer) => state.favoritos.itens)
-  let jaFavoritado = false
-
-  console.log(jaFavoritado)
 
   if (favoritos.find((p) => p.id === produto.id)) {
-    jaFavoritado = true
+    estaNosFavoritos = true
   } else {
-    jaFavoritado = false
+    estaNosFavoritos = false
   }
 
   return (
@@ -42,7 +39,9 @@ const ProdutoComponent = ({ produto }: Props) => {
         <strong>{paraReal(produto.preco)}</strong>
       </S.Prices>
       <S.BtnComprar onClick={() => dispatch(favoritar(produto))} type="button">
-        {jaFavoritado ? '- Remover dos favoritos' : '+ Adicionar aos favoritos'}
+        {estaNosFavoritos
+          ? '- Remover dos favoritos'
+          : '+ Adicionar aos favoritos'}
       </S.BtnComprar>
       <S.BtnComprar onClick={() => dispatch(adicionar(produto))} type="button">
         Adicionar ao carrinho
